@@ -1,0 +1,11 @@
+{ "name": "testutils",
+  "version": "0.1",
+  "author": "Ted Tibbetts",
+  "description": "Various utilities to facilitate unit and functional testing.",
+  "dependencies": {
+    "path": {
+      "type": "git",
+      "url": "http://github.com/intuited/vim-path.git"
+    }
+  }
+}
