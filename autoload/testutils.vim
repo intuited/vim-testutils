@@ -118,7 +118,6 @@ function! testutils#Raises(exception_re, function, ...)
   try
     call call(a:function, args, dict)
   catch
-    echo 'Caught exception: ' . v:exception
     let caught = (match(v:exception, a:exception_re) != -1)
   endtry
 
