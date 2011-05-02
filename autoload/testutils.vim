@@ -25,14 +25,14 @@ function! testutils#CreateDirectoryStructure(spec, ...) abort
       throw printf("FileError: Cannot use empty file name.")
     endif
 
-    let fullpath = g:path#path.join([dirname, basename])
+    let fullpath = g:path#path.Join([dirname, basename])
     let contents = a:spec[basename]
 
     if type(contents) == type([])
       call writefile(contents, fullpath)
     elseif type(contents) == type({})
       call mkdir(fullpath)
-      call s:CreateDirectoryStructure(contents, fullpath)
+      call testutils#CreateDirectoryStructure(contents, fullpath)
     else
       throw printf('TypeError: Wrong type for {%s: %s}.',
             \      string(basename), string(value))
@@ -45,7 +45,7 @@ endfunction
 " Traverses a directory's contents.
 " Removes any files and directories which match the contents of a:spec.
 " a:spec is a nested Dictionary structure;
-"   see s:CreateDirectoryStructure for details.
+"   see testutils#CreateDirectoryStructure for details.
 " The root directory can be passed as the second parameter.
 "   If a root directory is not passed, the current directory is used.
 " May not work on exotic OSs.
@@ -57,20 +57,20 @@ function! testutils#RemoveDirectoryStructure(spec, ...) abort
   for basename in keys(a:spec)
     call g:path#path.ValidateFilename(basename)
 
-    let fullpath = g:path#path.join([dirname, basename])
+    let fullpath = g:path#path.Join([dirname, basename])
     let contents = a:spec[basename]
 
     if type(contents) == type([])
       call delete(fullpath)
     elseif type(contents) == type({})
-      call s:RemoveDirectoryStructure(contents, fullpath)
-      call shell_complete#path.Rmdir(fullpath)
+      call testutils#RemoveDirectoryStructure(contents, fullpath)
+      call g:path#path.Rmdir(fullpath)
     else
       throw printf('TypeError: Wrong type for {%s: %s}',
             \      string(basename), string(value))
     endif
 
-    unlet basename
+    unlet contents
   endfor
 endfunction
 
@@ -82,7 +82,7 @@ function! testutils#ReadDirectoryStructure(...)
   let dirname = a:0 ? a:1 : getcwd()
   let ret = {}
 
-  for fullpath in split(glob(g:path#path.Join(dirname, '*')), "\n")
+  for fullpath in split(glob(g:path#path.Join([dirname, '*'])), "\n")
     let basename = g:path#path.Split(fullpath)[-1]
 
     if isdirectory(fullpath)
@@ -94,6 +94,8 @@ function! testutils#ReadDirectoryStructure(...)
             \      string(file))
     endif
   endfor
+
+  return ret
 endfunction
 
 

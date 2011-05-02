@@ -3,41 +3,41 @@
 " License: Licensed under the same terms as Vim itself.
 UTSuite Tests for the testutils addon.
 
-" function! s:TestDirectoryStructure()
-"   let dirs = {
-"         \ '2linefile': ['line1', 'line2'],
-"         \ 'emptydir': {}
-"         \ 'dir_with_subdirs': {
-"         \   'subdirwithfile': {
-"         \     '3linefile': ['line1', 'line2', 'line3'] }
-"         \   'emptysubdir': {}
-"         \   '4linefile': ['line1', 'line2', 'line3', 'line4'] }
-"         \ 'emptyfile': [] }
-" 
-"   let testdir = tempname()
-"   call mkdir(testdir)
-"   try
-"     let original_dir = getcwd()
-"     try
-"       exec 'cd' fnameescape(testdir)
-"       Assert! testdir == getcwd()
-"       call testutils#CreateDirectoryStructure(dirs)
-"       try
-"         Assert readfile(g:path#path.Join(['dir_with_subdirs', '4linefile']))
-"               \ == dirs.dir_with_subdirs['4linefile']
-"         Assert readfile('emptyfile') == []
-"         Assert testutils#ReadDirectoryStructure() == dirs
-"       finally
-"         call testutils#RemoveDirectoryStructure(dirs)
-"       endtry
-"       Assert glob(g:path#path.Join([testdir, '*'])) = 0
-"     finally
-"       exec 'cd' fnameescape(original_dir)
-"     endtry
-"   finally
-"     call g:path#path.Rmdir(testdir)
-"   endtry
-" endfunction
+function! s:TestDirectoryStructure()
+  let dirs = {
+        \ '2linefile': ['line1', 'line2'],
+        \ 'emptydir': {},
+        \ 'dir_with_subdirs': {
+        \   'subdirwithfile': {
+        \     '3linefile': ['line1', 'line2', 'line3'] },
+        \   'emptysubdir': {},
+        \   '4linefile': ['line1', 'line2', 'line3', 'line4'] },
+        \ 'emptyfile': [] }
+
+  let testdir = tempname()
+  call mkdir(testdir)
+  try
+    let original_dir = getcwd()
+    try
+      exec 'cd' fnameescape(testdir)
+      Assert! testdir == getcwd()
+      call testutils#CreateDirectoryStructure(dirs)
+      try
+        Assert! readfile(g:path#path.Join(['dir_with_subdirs', '4linefile']))
+              \ == dirs.dir_with_subdirs['4linefile']
+        Assert! readfile('emptyfile') == []
+        Assert! testutils#ReadDirectoryStructure() == dirs
+      finally
+        call testutils#RemoveDirectoryStructure(dirs)
+      endtry
+      Assert glob(g:path#path.Join([testdir, '*'])) == 0
+    finally
+      exec 'cd' fnameescape(original_dir)
+    endtry
+  finally
+    call g:path#path.Rmdir(testdir)
+  endtry
+endfunction
 
 " Functions to be used as test fodder by s:TestRaises().
 function! s:ThrowTestError()
