@@ -3,6 +3,7 @@
 " License: Licensed under the same terms as Vim itself.
 UTSuite Tests for the testutils addon.
 
+" TODO: More thorough testing wouldn't hurt here.
 function! s:TestDirectoryStructure()
   let dirs = {
         \ '2linefile': ['line1', 'line2'],
@@ -23,19 +24,19 @@ function! s:TestDirectoryStructure()
       Assert! testdir == getcwd()
       call testutils#CreateDirectoryStructure(dirs)
       try
-        Assert! readfile(g:path#path.Join(['dir_with_subdirs', '4linefile']))
+        Assert! readfile(g:tt#path#path.Join(['dir_with_subdirs', '4linefile']))
               \ == dirs.dir_with_subdirs['4linefile']
         Assert! readfile('emptyfile') == []
         Assert! testutils#ReadDirectoryStructure() == dirs
       finally
         call testutils#RemoveDirectoryStructure(dirs)
       endtry
-      Assert glob(g:path#path.Join([testdir, '*'])) == 0
+      Assert glob(g:tt#path#path.Join([testdir, '*'])) == 0
     finally
       exec 'cd' fnameescape(original_dir)
     endtry
   finally
-    call g:path#path.Rmdir(testdir)
+    call g:tt#path#path.Rmdir(testdir)
   endtry
 endfunction
 

@@ -12,7 +12,7 @@ function! testutils#CreateDirectoryStructure(spec, ...) abort
   let dirname = a:0 ? a:1 : getcwd()
 
   for basename in keys(a:spec)
-    if len(g:path#path.Split('a' . basename . 'a')) > 1
+    if len(g:tt#path#path.Split('a' . basename . 'a')) > 1
       throw printf('FileError: path %s contains directory separator.',
             \      string(basename))
     endif
@@ -25,7 +25,7 @@ function! testutils#CreateDirectoryStructure(spec, ...) abort
       throw printf("FileError: Cannot use empty file name.")
     endif
 
-    let fullpath = g:path#path.Join([dirname, basename])
+    let fullpath = g:tt#path#path.Join([dirname, basename])
     let contents = a:spec[basename]
 
     if type(contents) == type([])
@@ -55,16 +55,16 @@ function! testutils#RemoveDirectoryStructure(spec, ...) abort
   let dirname = a:0 ? a:1 : getcwd()
 
   for basename in keys(a:spec)
-    call g:path#path.ValidateFilename(basename)
+    call g:tt#path#path.ValidateFilename(basename)
 
-    let fullpath = g:path#path.Join([dirname, basename])
+    let fullpath = g:tt#path#path.Join([dirname, basename])
     let contents = a:spec[basename]
 
     if type(contents) == type([])
       call delete(fullpath)
     elseif type(contents) == type({})
       call testutils#RemoveDirectoryStructure(contents, fullpath)
-      call g:path#path.Rmdir(fullpath)
+      call g:tt#path#path.Rmdir(fullpath)
     else
       throw printf('TypeError: Wrong type for {%s: %s}',
             \      string(basename), string(value))
@@ -82,8 +82,8 @@ function! testutils#ReadDirectoryStructure(...)
   let dirname = a:0 ? a:1 : getcwd()
   let ret = {}
 
-  for fullpath in split(glob(g:path#path.Join([dirname, '*'])), "\n")
-    let basename = g:path#path.Split(fullpath)[-1]
+  for fullpath in split(glob(g:tt#path#path.Join([dirname, '*'])), "\n")
+    let basename = g:tt#path#path.Split(fullpath)[-1]
 
     if isdirectory(fullpath)
       let ret[basename] = testutils#ReadDirectoryStructure(fullpath)
