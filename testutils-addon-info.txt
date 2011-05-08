@@ -3,7 +3,7 @@
   "author": "Ted Tibbetts",
   "description": "Various utilities to facilitate unit and functional testing.",
   "dependencies": {
-    "path": {
+    "tt_path": {
       "type": "git",
       "url": "http://github.com/intuited/vim-path.git"
     }
